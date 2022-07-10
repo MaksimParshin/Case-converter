@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Case Converter</title>
+</head>
+<body>
+<div id="main">
+    <div class="title">Case Converter</div>
+    <textarea  id="textarea" class="text-area" rows="10"></textarea>
+    <div id="button-container">
+        <button id="lorem">Generate Lorem</button>
+        <button id="upper-case">Upper Case</button>
+        <button id="lower-case">Lower Case</button>
+        <button id="proper-case">Proper Case</button>
+        <button id="sentence-case">Sentence case</button>
+        <button id="save-text-file">Save Text File</button>
+    </div>
+</div>
+<script>
+    let text = document.getElementById("textarea");
+
+    document.getElementById("lorem").addEventListener("click",function(){
+        text.value = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet tincidunt ex. Donec elementum in ante nec commodo. In posuere tempus sem, eu faucibus lorem mattis et. Curabitur erat ante, maximus ac egestas nec, fringilla finibus risus. Vivamus interdum suscipit lacus, vitae eleifend felis scelerisque sit amet. Curabitur at felis arcu. Nunc massa velit, fermentum id enim vitae, tempor mattis est. Donec quis purus a tortor mattis commodo. Aenean tempor, ante vel rutrum placerat, dolor diam faucibus nunc, id lacinia est nibh gravida augue. Fusce non porta urna. Nunc pellentesque lobortis facilisis. Nam eleifend, ipsum et ultrices hendrerit, lectus leo hendrerit erat, nec scelerisque elit ex non erat. Mauris viverra a massa eget ultrices. Vestibulum id interdum sem. Donec non facilisis turpis. Pellentesque sed neque et ipsum semper rhoncus.";
+    });
+    document.getElementById("upper-case").addEventListener("click",function(){
+        text.value = text.value.toUpperCase();
+    });
+
+    document.getElementById("lower-case").addEventListener("click",function(){
+        text.value = text.value.toLowerCase();
+    });
+
+    document.getElementById("proper-case").addEventListener("click",function(){
+            text.value = text.value.split(/\s+/).map(word => word[0].toUpperCase() + word.substring(1)).join(' ');
+        });
+
+    document.getElementById("sentence-case").addEventListener("click",function(){
+        let words = text.value.toLowerCase().split(' ');
+        let result = "";
+        for(let i=0; i < words.length; i++){
+            if (i === 0) {
+                result += capitalize(words[i]) + " ";
+            }else {
+                let lastWord = words[i - 1];
+                if (lastWord.charAt(lastWord.length - 1) === '.') {
+                    result += capitalize(words[i]) + " ";
+                }else{
+                    result += words[i] + " ";
+                }
+            }
+        }
+        text.value = result.trimEnd();
+    });
+
+
+    let capitalize = function(string) {
+        return string.charAt(0).toUpperCase() + string.substring(1);
+    }
+
+    document.getElementById("save-text-file").addEventListener("click",function(){
+        let text = document.getElementById("textarea").value;
+        let filename = "text.txt"
+        download(filename, text);
+    }, false);
+
+    function download(filename, text) {
+        let element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+</script>
+</body>
+</html>
+
